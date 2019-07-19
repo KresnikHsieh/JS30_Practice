@@ -26,6 +26,7 @@
     .panels {
       min-height: 100vh;
       overflow: hidden;
+      display: flex;
     }
 
     .panel {
@@ -43,6 +44,11 @@
       font-size: 20px;
       background-size: cover;
       background-position: center;
+      flex:1; /*使每一個圖片方塊均分於畫面*/
+      justify-content: center; /**/
+      align-items: center; /**/
+      display: flex; /**/
+      flex-direction: column; /**/
     }
 
     .panel1 { background-image:url(https://source.unsplash.com/gYl-UtwNg_I/1500x1500); }
@@ -56,7 +62,17 @@
       margin: 0;
       width: 100%;
       transition: transform 0.5s;
-    }
+    	/*border:1px solid red;*/
+    	flex: 1 0 auto; /**/
+    	display: flex; /**/
+    	justify-content: center; /**/
+    	align-items: center; /**/
+  	}
+
+  	.panel > *:first-child{ transform:translateY(-100%);}/**/
+  	.panel.open-active > *:first-child { transform: translateY(0); }
+  	.panel > *:last-child{ transform:translateY(100%);}/**/
+  	.panel.open-active > *:last-child{ transform:translateY(0);}/**/
 
     .panel p {
       text-transform: uppercase;
@@ -71,6 +87,12 @@
 
     .panel.open {
       font-size: 40px;
+      flex: 5 /*5倍extra free room */
+    }
+     @media only screen and (max-width: 600px) {
+      .panel p {
+        font-size: 1em;
+      }
     }
 
   </style>
@@ -105,6 +127,51 @@
   </div>
 
   <script>
+  	const panels = document.querySelectorAll('.panel');
+
+  	// function toggleOpen(){
+  	// 	// console.log("Hello");
+  	// 	this.classList.toggle('open');
+  	// }
+
+  	// function toggleActive(e){
+  	// 	console.log(e.propertyName);
+  	// 	if (e.propertyName.includes('flex')){
+  	// 		this.classList.toggle('open-active');
+  	// 	}
+  	// }
+
+  	// panels.forEach(panel => panel.addEventListener('click',toggleOpen));
+  	// panels.forEach(panel => panel.addEventListener('transitionend',toggleActive));
+
+  	panels.forEach(panel => {
+    
+    // STEP2: 當該圖片被點擊的時候，幫 panel 加上 open 的 class
+    panel.addEventListener('click', () => {
+        // STEP2-2: 除了被點擊的對象之外，其他要移除 open class
+        panels.forEach(panel => {
+            panel.classList.remove('open')
+        })
+        // STEP2-1: 被點擊對象要加上 open class
+        panel.classList.toggle('open')
+    })
+    
+     // STEP3: 利用 transitionend 事件，當動畫結束時，套用 active class
+    panel.addEventListener('transitionend', (e) => {
+
+         /**
+          * transition end 會在任何 transition 效果結束時觸發，
+          * 因此一共會監聽到 4 個不同的 transitionend event, 
+          * 包含 font-size, flex-grow 和兩個 transform
+          * 因此，如果直接寫 "panel.classList.toggle('active')" 這個行為會被觸發 4 次
+          * 導致無法正確套用 active 這個 class，因此，在這裡我們只要針對 'flex-grow' 的 transition 事件
+          **/
+          
+        if (e.propertyName.includes('flex')) {
+            panel.classList.toggle('open-active')
+        }
+    })
+})
 
   </script>
 
