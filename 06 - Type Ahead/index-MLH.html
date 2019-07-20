@@ -19,50 +19,53 @@ const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb
 
 const cities = [];
 
+// Step.1 Fetch Data
 fetch(endpoint)
-	.then(blob => blob.json())
-	.then(data => cities.push(...data))
+	.then(blob => blob.json()) //取得readableStream並轉成json後return
+	.then(data => cities.push(...data))//將data代入cities的陣列中
 
+// Step.2 找到對應使用者輸入內容的陣列
 function findMatches(wordToMatch, cities){
+	//Array.prototype.filter()可以根據輸入的內容(wordToMatch)在cities中過濾篩選資料
 	return cities.filter(place => {
 		//要找出與所搜尋的關鍵字match的city
-		const regex = new RegExp(wordToMatch,'gi');
+		const regex = new RegExp(wordToMatch,'gi');//建立正規式
+		//在new RegExp(regex,flag)中，regex為正規式的內容
+		//flag -- g表示global search，尋找整份文件，而非找到就停止 //-- i表示case insensitive，不區分大小寫
 		return place.city.match(regex) || place.state.match(regex);
+		//使用String.prototype.match(regex)判斷是否有符合regex的內容，有則回傳陣列，無則回傳null
 	});
 }
 
 function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");} //snippet: 數字加上逗號
 
-function displayMatches(){
+// Step.3 監聽使用者輸入的內容，回傳結果
+function displayMatches(e){
 	// console.log(this.value);
-	const matchArray = findMatches(this.value, cities);
+	const matchArray = findMatches(this.value, cities);//Step.3-1 取得配對的內容
 	// console.log(matchArray);
-	const html = matchArray.map(place => {
+	const html = matchArray.map(place => { //Step.3-2 將配對到的內容改成HTML格式
 		const regex = new RegExp(this.value, 'gi');
 		const cityName = place.city.replace(regex, `<span class="h1">${this.value}</span>`);
 		const stateName = place.state.replace(regex, `<span class="h1">${this.value}</span>`);
+		//使用String.prototype.replace(regex|substr, newSubstr)置換內容，此方法回傳置換後的新字串，不改變原本字串
 
-
-		return `
-		 <li>
+		return 
+		`<li>
 		 	<span class ="name">${cityName}, ${stateName}</span>
-		 	<span class ="population">${place.population}</span>
-		 </li>
-		`;
-	}).join();
-	suggestions.innerHTML = html;
+		 	<span class ="population">${numberWithCommas(place.population)}</span>
+		 </li>`;
+	}).join('');
+	suggestions.innerHTML = html; //Step.3-3 將內容存入DOM中
 }
-
-
 
 const searchInput = document.querySelector('.search');
 const suggestions = document.querySelector('.suggestions');
 
 
 searchInput.addEventListener('change',displayMatches);
-searchInput.addEventListener('keyup',displayMatches);
+searchInput.addEventListener('keyup',displayMatches); 
 
 </script>
 </body>
