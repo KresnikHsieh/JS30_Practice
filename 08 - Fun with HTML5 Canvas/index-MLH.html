@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+<script>
+	const canvas = document.querySelector('#draw'); //取得canvas元素的id
+	const ctx = canvas.getContext('2d'); //取得2d context
+	canvas.width = window.innerWidth; //讓canvas的寬度為瀏覽器內寬度
+	canvas.height = window.innerHeight; //讓canvas的高度為瀏覽器內高度
+	ctx.strokeStyle = '#BADA55';
+	ctx.lineJoin = 'round';
+	ctx.lineCap = 'round';
+	// ctx.lineWidth = 100;
+
+	let isDrawing = false; //按下之後不要繼續畫
+	let lastX = 0;
+	let lastY =0
+	let hue = 0;
+	let direction = true;
+
+
+	function draw(e){
+		if(!isDrawing) return; // 當非滑鼠按下石時 停止fn
+		console.log(e);
+
+		ctx.strokeStyle = `hsl(${hue},100%,50%)` ;
+		ctx.globalCompositeOperation = 'screen';
+
+		ctx.beginPath(); // start from
+		ctx.moveTo(lastX,lastY); // go to 
+		ctx.lineTo(e.offsetX,e.offsetY);
+		ctx.stroke();
+
+		[lastX, lastY] = [e.offsetX, e.offsetY];
+		// lastX = e.offsetX; // 讓最後的X座標為
+		// lastY = e.offsetY; // 讓最後的Y座標為
+
+		hue++; //改變hue的數值
+		if (hue > 360) {
+			hue = 0;
+		}
+
+
+		if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1){
+			direction = !direction; 
+		}
+
+		if (direction) {
+			ctx.lineWidth ++;
+		}else{
+			ctx.lineWidth --;
+		}
+
+		console.log(ctx.lineWidth);
+
+	}
+
+	canvas.addEventListener('mousemove', draw);
+	canvas.addEventListener('mousedown', (e) => {
+		isDrawing = true; //滑鼠按下時 isDrawing = true 
+		[lastX, lastY] = [e.offsetX, e.offsetY]; //重置最後的座標
+	}
+
+	); 
+	canvas.addEventListener('mouseup', () => isDrawing = false );  //滑鼠釋放時 isDrawing = false
+	canvas.addEventListener('mouseout', () => isDrawing = false ); //滑鼠離開範圍時 isDrawing = false
+
+</script>
+
+<style>
+  html, body {
+    margin: 0;
+  }
+</style>
+
+</body>
+</html>
