@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="http://www.cornify.com/js/cornify.js"></script>
+</head>
+<body>
+<script>
+	const pressed = [];
+	const secretCode = 'ninja';
+
+	window.addEventListener('keyup', (e)=>{
+		//擷取使用者最後輸入的按鍵
+		// console.log(e.key);
+		pressed.push(e.key); //將按下的key存進pressed陣列
+		pressed.splice(-secretCode.length-1, pressed.length - secretCode.length);
+		if(pressed.join('').includes(secretCode)){
+			console.log("JACKPOT");
+			cornify_add();
+		}
+		console.log(pressed);
+	})
+
+//  思考：考慮使用array.slice()替換arrary.splice()
+// 	arr.slice(begin, end)
+// - 從 begin 開始，不包含 end
+// - 最後一個元素的 index 是 -1
+
+// arr.join(separator)    // separator 預設是 ','
+
+
+</script>
+</body>
+</html>
