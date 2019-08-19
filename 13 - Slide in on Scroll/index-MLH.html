@@ -58,6 +58,35 @@
       };
     }
 
+    //Get element
+    const sliderImages = document.querySelectorAll('.slide-in');
+
+    function checkSlide(e){
+      // console.count(e);
+      // console.log(window.scrollY); //看scroll的Y座標
+
+      sliderImages.forEach(sliderImage => {
+        const slideInAt = (window.scrollY + window.innerHeight)-sliderImage.height/2; 
+        //抓取從瀏覽器底往上算的Y座標 - 一半的圖片的一半高度 = scroll過一半的圖片高度
+        const imageBottom = sliderImage.offsetTop +  sliderImage.height;
+        //offsetTop為img的頂端到window頂端的距離
+        //故此imageBottom為真正的圖片底端座標
+        const isHalfShown = slideInAt > sliderImage.offsetTop;
+        const isNotSrollPassed = window.scrollY < imageBottom;
+
+        if(isHalfShown && isNotSrollPassed){
+          sliderImage.classList.add('active');
+        }else{
+          sliderImage.classList.remove('active');
+        } 
+
+      });
+
+
+    }
+
+    window.addEventListener('scroll',debounce(checkSlide));
+
   </script>
 
   <style>
