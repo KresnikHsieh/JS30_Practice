@@ -8,29 +8,48 @@
 
   <script>
     // start with strings, numbers and booleans
+    // let age = 100;
+    // let age2 = age;
+    // console.log(age,age2); //(100,100)
+    // age = 200;
+    // console.log(age,age2); //(200,100)
+
+    // let name = 'Wes';
+    // let name2 = name;
+    // console.log(name, name2); //(Wes,Wes)
+    // name = 'Wesly'
+    // console.log(name, name2); //(Wes,Wesly)
+
 
     // Let's say we have an array
     const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
-
     // and we want to make a copy of it.
-
     // You might think we can just do something like this:
+    const team = players;
+    console.log(team,players); //["Wes", "Sarah", "Ryan", "Lux"]
+    team[3] = 'Lux';
+    console.log(team,players); //["Wes", "Sarah", "Ryan", "Lux"]
+    //team[]複製players[]時，為傳參考reference
+
+
 
     // however what happens when we update that array?
-
-    // now here is the problem!
-
     // oh no - we have edited the original array too!
-
     // Why? It's because that is an array reference, not an array copy. They both point to the same array!
 
     // So, how do we fix this? We take a copy instead!
-
-    // one way
+    const team2 = players.splice(); // 使用array.splice()"複製"一新的array
+    //array.slice()為刪去array內容的方法，不寫index時為直接複製原本array
 
     // or create a new array and concat the old one in
+    const team3 = [].concat(players); //使用[].cancat(array)串接兩個array
+    //[].concat(array)前面的array為空時，為直接複製原本array
 
     // or use the new ES6 Spread
+    // 使用ES6的展開 複製一新array
+    // 使用Array.from(array)複製
+    const team4 = [...players];  
+    const taem5 = Array.from(players);
 
     // now when we update it, the original one isn't changed
 
@@ -45,10 +64,33 @@
     // and think we make a copy:
 
     // how do we take a copy instead?
+    const cap2 = Object.assign({},person,{number:99,age:22}); 
+    //使用Object.assign()複製陣列並改變其中的屬性
+    //
+    console.log(cap2);  
 
     // We will hopefully soon see the object ...spread
 
     // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
+    const wes = {
+      name: 'Wes',
+      age: 100,
+      social: {
+        twitter: '@wesbos',
+        facebook: 'wesbos.developer'
+      }
+    };
+
+    console.clear();
+    console.log(wes); 
+    //此時會發現如果要使用Object.assign()進行複製與修改屬性的話，僅能修改1 level的值（即物件下的第一層）
+    //2 levels以上的值無法被修改（此例中為wes.social.twitter/facebook）
+
+    //A brutal/dirty solution
+    const dev2 = JSON.parse(JSON.stringify(wes));
+    //將新的陣列轉為JSON的string再轉回陣列即可
+
+
 
   </script>
 
