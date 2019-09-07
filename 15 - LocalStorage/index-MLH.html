@@ -28,7 +28,52 @@
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const items = JSON.parse(localStorage.getItem('items')) || [];
+
+  function addItem(e){
+    e.preventDefault(); //防止頁面reload
+    const text = (this.querySelector('[name=item]')).value;
+    const item = {
+      text : text,
+      //或者ES6寫法：text就好
+      done : false,
+    };
+    items.push(item);
+    populateList(items,itemsList);
+    localStorage.setItem('items',JSON.stringify(items));
+    //如果直接將item存入則會顯示[Objecet,object]
+    //因為localStorage只能存取字串，所以必須先將要存入的東西轉為字串
+    //如欲將存入localStorage的東西轉回object 
+    //使用JSON.parse(localStorage.getItem('items'))
+
+    this.reset(); //使用reset()重置內容（清空並還原為默認值）;
+  }
+
+  function populateList(plates=[] , platesList){
+    platesList.innerHTML = plates.map((plate,i) => {
+      return`
+      <li>
+        <input type="checkbox" data-index=${i} id="item${i}" ${plate.done? 'checked' :''}/>
+        <label for="item${i}">${plate.text}</label>
+      </li>
+      `;
+    }).join('');
+  }
+
+  function toggleDone(e){
+    if(!e.target.matches('input'))return; //跳過不是input的
+    console.log(e.target);
+    const el = e.target;
+    const index = el.dataset.index;
+    items[index].done = !items[index].done;
+    localStorage.setItem('items',JSON.stringify(items));
+    populateList(items, itemsList);
+  }
+
+  addItems.addEventListener('submit',addItem);
+  itemsList.addEventListener('click',toggleDone);
+
+  populateList(items, itemsList);
 
 </script>
 
