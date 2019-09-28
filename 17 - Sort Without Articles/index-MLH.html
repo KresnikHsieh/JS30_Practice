@@ -52,9 +52,12 @@ const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'N
 function strip(bandName){
   return bandName.replace(/^(a |the |an )/i,'').trim();
 }
+//使用正規式過濾多餘的字
+//let regex = new RegExp('^(a |the |an )', 'i')
+//return word.replace(regex, '').trim()
 
 
-//const sortedBands = bands.sort(strip(a)>strip(b)?1:-1);
+
 
 const sortedBands = bands.sort(function(a,b){ 
 //使用bubble sort
@@ -65,11 +68,13 @@ const sortedBands = bands.sort(function(a,b){
   }
 });
 console.log(sortedBands);
-
+//ES6寫法：
+//const sortedBands = bands.sort(strip(a)>strip(b)?1:-1);
 
 document.querySelector('#bands').innerHTML = 
   sortedBands.map(band => `<li>${band}</li>`)
   .join("");
+//將排序後的字串寫入HTML tag中
 
 </script>
 
